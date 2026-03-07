@@ -22,7 +22,7 @@ fn extract_etag(headers: &HeaderMap) -> Option<String> {
         .map(|s| s.to_string())
 }
 
-/// Response from the PostHog local evaluation API.
+/// Response from the Insights local evaluation API.
 ///
 /// Contains feature flag definitions, group type mappings, and cohort definitions
 /// that can be cached locally for flag evaluation without server round-trips.
@@ -55,7 +55,7 @@ pub struct Cohort {
 /// Thread-safe cache for feature flag definitions.
 ///
 /// Stores feature flags, group type mappings, and cohort definitions that have
-/// been fetched from the PostHog API. The cache is shared between the poller
+/// been fetched from the Insights API. The cache is shared between the poller
 /// (which updates it) and the evaluator (which reads from it).
 #[derive(Clone)]
 pub struct FlagCache {
@@ -145,14 +145,14 @@ impl FlagCache {
 /// Configuration for local flag evaluation.
 ///
 /// Specifies the credentials and settings needed to fetch feature flag
-/// definitions from the PostHog API for local evaluation.
+/// definitions from the Insights API for local evaluation.
 #[derive(Clone)]
 pub struct LocalEvaluationConfig {
-    /// Personal API key for authentication (found in PostHog project settings)
+    /// Personal API key for authentication (found in Insights project settings)
     pub personal_api_key: String,
     /// Project API key to identify which project's flags to fetch
     pub project_api_key: String,
-    /// PostHog API host URL (e.g., "https://us.posthog.com")
+    /// Insights API host URL (e.g., "https://us.insights.com")
     pub api_host: String,
     /// How often to poll for updated flag definitions
     pub poll_interval: Duration,
@@ -163,7 +163,7 @@ pub struct LocalEvaluationConfig {
 /// Synchronous poller for feature flag definitions.
 ///
 /// Runs a background thread that periodically fetches flag definitions from
-/// the PostHog API and updates the shared cache. Use this for blocking/sync
+/// the Insights API and updates the shared cache. Use this for blocking/sync
 /// applications. For async applications, use [`AsyncFlagPoller`] instead.
 pub struct FlagPoller {
     config: LocalEvaluationConfig,
@@ -233,7 +233,7 @@ impl FlagPoller {
                         "Authorization",
                         format!("Bearer {}", config.personal_api_key),
                     )
-                    .header("X-PostHog-Project-Api-Key", &config.project_api_key);
+                    .header("X-Insights-Project-Api-Key", &config.project_api_key);
 
                 if let Some(ref etag) = last_etag {
                     request = request.header(IF_NONE_MATCH, etag.as_str());
@@ -286,7 +286,7 @@ impl FlagPoller {
                 "Authorization",
                 format!("Bearer {}", self.config.personal_api_key),
             )
-            .header("X-PostHog-Project-Api-Key", &self.config.project_api_key)
+            .header("X-Insights-Project-Api-Key", &self.config.project_api_key)
             .send()
             .map_err(|e| {
                 error!(error = %e, "Connection error loading flags");
@@ -327,7 +327,7 @@ impl Drop for FlagPoller {
 /// Asynchronous poller for feature flag definitions.
 ///
 /// Runs a tokio task that periodically fetches flag definitions from the
-/// PostHog API and updates the shared cache. Use this for async applications.
+/// Insights API and updates the shared cache. Use this for async applications.
 /// For blocking/sync applications, use [`FlagPoller`] instead.
 #[cfg(feature = "async-client")]
 pub struct AsyncFlagPoller {
@@ -408,7 +408,7 @@ impl AsyncFlagPoller {
                         let mut request = client
                             .get(&url)
                             .header("Authorization", format!("Bearer {}", config.personal_api_key))
-                            .header("X-PostHog-Project-Api-Key", &config.project_api_key);
+                            .header("X-Insights-Project-Api-Key", &config.project_api_key);
 
                         if let Some(ref etag) = last_etag {
                             request = request.header(IF_NONE_MATCH, etag.as_str());
@@ -466,7 +466,7 @@ impl AsyncFlagPoller {
                 "Authorization",
                 format!("Bearer {}", self.config.personal_api_key),
             )
-            .header("X-PostHog-Project-Api-Key", &self.config.project_api_key)
+            .header("X-Insights-Project-Api-Key", &self.config.project_api_key)
             .send()
             .await
             .map_err(|e| {

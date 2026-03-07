@@ -20,11 +20,11 @@ impl Display for Error {
     }
 }
 
-/// Errors that can occur when using the PostHog client.
+/// Errors that can occur when using the Insights client.
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum Error {
-    /// Network or HTTP error when communicating with PostHog API
+    /// Network or HTTP error when communicating with Insights API
     Connection(String),
     /// Error serializing or deserializing JSON data
     Serialization(String),

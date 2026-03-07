@@ -9,13 +9,13 @@ use std::sync::{Mutex, OnceLock};
 /// Global cache for compiled regexes to avoid recompilation on every flag evaluation
 static REGEX_CACHE: OnceLock<Mutex<HashMap<String, Option<Regex>>>> = OnceLock::new();
 
-/// Salt used for rollout percentage hashing. Intentionally empty to match PostHog's
+/// Salt used for rollout percentage hashing. Intentionally empty to match Insights's
 /// consistent hashing algorithm across all SDKs. This ensures the same user gets
 /// the same rollout decision regardless of which SDK evaluates the flag.
 const ROLLOUT_HASH_SALT: &str = "";
 
 /// Salt used for multivariate variant selection. Uses "variant" to ensure consistent
-/// variant assignment across all PostHog SDKs for the same user/flag combination.
+/// variant assignment across all Insights SDKs for the same user/flag combination.
 const VARIANT_HASH_SALT: &str = "variant";
 
 fn get_cached_regex(pattern: &str) -> Option<Regex> {
@@ -88,7 +88,7 @@ impl Default for FlagValue {
     }
 }
 
-/// A feature flag definition from PostHog.
+/// A feature flag definition from Insights.
 ///
 /// Contains all the information needed to evaluate whether a flag should be
 /// enabled for a given user, including targeting rules and rollout percentages.
@@ -176,7 +176,7 @@ impl CohortDefinition {
     }
 
     /// Parse the properties from the JSON structure
-    /// PostHog cohort properties come in format:
+    /// Insights cohort properties come in format:
     /// {"type": "AND", "values": [{"type": "property", "key": "...", "value": "...", "operator": "..."}]}
     pub fn parse_properties(&self) -> Vec<Property> {
         // If it's an array, treat it as direct property list
@@ -242,7 +242,7 @@ pub struct MultivariateVariant {
     pub rollout_percentage: f64,
 }
 
-/// Response from the PostHog feature flags API.
+/// Response from the Insights feature flags API.
 ///
 /// Supports both the v2 API format (with detailed flag information) and the
 /// legacy format (simple flag values and payloads).
@@ -348,7 +348,7 @@ pub struct FlagReason {
     pub description: Option<String>,
 }
 
-/// Metadata about a feature flag from the PostHog server.
+/// Metadata about a feature flag from the Insights server.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FlagMetadata {
     /// Unique identifier for this flag

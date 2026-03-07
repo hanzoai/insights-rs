@@ -1,6 +1,6 @@
-# PostHog Rust SDK Examples
+# Insights Rust SDK Examples
 
-This directory contains example applications demonstrating how to use the PostHog Rust SDK, particularly the feature flags functionality.
+This directory contains example applications demonstrating how to use the Insights Rust SDK, particularly the feature flags functionality.
 
 ## Running the Examples
 
@@ -9,7 +9,7 @@ This directory contains example applications demonstrating how to use the PostHo
 Basic examples of all feature flag operations:
 
 ```bash
-# With a real PostHog API key
+# With a real Insights API key
 export POSTHOG_API_TOKEN=phc_your_key
 cargo run --example feature_flags --features async-client
 
@@ -39,7 +39,7 @@ Shows:
 - Setting up local evaluation with polling
 - Batch flag evaluation
 
-Get a personal API key at: https://app.posthog.com/me/settings
+Get a personal API key at: https://app.insights.com/me/settings
 
 ### 3. Advanced Configuration Example
 
@@ -75,7 +75,7 @@ Shows:
 
 ### Evaluation Methods
 
-1. **Remote Evaluation**: Calls PostHog API for the latest flag values
+1. **Remote Evaluation**: Calls Insights API for the latest flag values
 2. **Local Evaluation**: Uses cached flag definitions for faster evaluation (requires personal API key)
 
 ### Properties

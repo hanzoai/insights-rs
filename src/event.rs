@@ -9,8 +9,8 @@ use crate::Error;
 
 /// An [`Event`] represents an interaction a user has with your app or
 /// website. Examples include button clicks, pageviews, query completions, and signups.
-/// See the [PostHog documentation](https://posthog.com/docs/data/events)
-/// for a detailed explanation of PostHog Events.
+/// See the [Insights documentation](https://insights.com/docs/data/events)
+/// for a detailed explanation of Insights Events.
 #[derive(Serialize, Clone, Debug, PartialEq, Eq)]
 pub struct Event {
     event: String,
@@ -37,7 +37,7 @@ impl Event {
     }
 
     /// Capture a new anonymous event.
-    /// See https://posthog.com/docs/data/anonymous-vs-identified-events#how-to-capture-anonymous-events
+    /// See https://insights.com/docs/data/anonymous-vs-identified-events#how-to-capture-anonymous-events
     pub fn new_anon<S: Into<String>>(event: S) -> Self {
         let mut res = Self {
             event: event.into(),
@@ -66,7 +66,7 @@ impl Event {
         Ok(())
     }
 
-    /// Capture this as a group event. See https://posthog.com/docs/product-analytics/group-analytics#how-to-capture-group-events
+    /// Capture this as a group event. See https://insights.com/docs/product-analytics/group-analytics#how-to-capture-group-events
     /// Note that group events cannot be personless, and will be automatically upgraded to include person profile processing if
     /// they were anonymous. This might lead to "empty" person profiles being created.
     pub fn add_group(&mut self, group_name: &str, group_id: &str) {
@@ -130,7 +130,7 @@ impl InnerEvent {
         if !properties.contains_key("$lib") {
             properties.insert(
                 "$lib".into(),
-                serde_json::Value::String("posthog-rs".into()),
+                serde_json::Value::String("insights-rs".into()),
             );
         }
 
@@ -203,7 +203,7 @@ pub mod tests {
         let props = &inner_event.properties;
         assert_eq!(
             props.get("$lib"),
-            Some(&serde_json::Value::String("posthog-rs".to_string()))
+            Some(&serde_json::Value::String("insights-rs".to_string()))
         );
     }
 
@@ -233,7 +233,7 @@ pub mod tests {
     #[test]
     fn inner_event_preserves_existing_lib_properties() {
         let mut event = Event::new("forwarded event", "user1");
-        event.insert_prop("$lib", "posthog-js").unwrap();
+        event.insert_prop("$lib", "insights-js").unwrap();
         event.insert_prop("$lib_version", "1.42.0").unwrap();
         event.insert_prop("$lib_version__major", 1u64).unwrap();
 
@@ -242,7 +242,7 @@ pub mod tests {
 
         assert_eq!(
             props.get("$lib"),
-            Some(&serde_json::Value::String("posthog-js".to_string()))
+            Some(&serde_json::Value::String("insights-js".to_string()))
         );
         assert_eq!(
             props.get("$lib_version"),

@@ -1,7 +1,7 @@
 use httpmock::prelude::*;
 #[cfg(feature = "async-client")]
-use posthog_rs::AsyncFlagPoller;
-use posthog_rs::{
+use insights_rs::AsyncFlagPoller;
+use insights_rs::{
     ClientOptionsBuilder, FeatureFlag, FeatureFlagCondition, FeatureFlagFilters, FlagCache,
     FlagPoller, FlagValue, LocalEvaluationConfig, LocalEvaluationResponse, LocalEvaluator,
     Property,
@@ -162,7 +162,7 @@ async fn test_local_evaluation_with_mock_server() {
         when.method(GET)
             .path("/api/feature_flag/local_evaluation/")
             .header("Authorization", "Bearer test_personal_key")
-            .header("X-PostHog-Project-Api-Key", "test_project_key")
+            .header("X-Insights-Project-Api-Key", "test_project_key")
             .query_param("send_cohorts", "");
         then.status(200).json_body(mock_flags);
     });
@@ -177,7 +177,7 @@ async fn test_local_evaluation_with_mock_server() {
         .build()
         .unwrap();
 
-    let client = posthog_rs::client(options).await;
+    let client = insights_rs::client(options).await;
 
     // Give it a moment to load initial flags
     tokio::time::sleep(Duration::from_millis(100)).await;
