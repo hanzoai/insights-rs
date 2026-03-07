@@ -3,9 +3,9 @@
 /// Shows all feature flag patterns: boolean flags, A/B tests, payloads, and targeting.
 ///
 /// Run with real API:
-///   export POSTHOG_API_TOKEN=phc_your_key
+///   export INSIGHTS_API_TOKEN=phc_your_key
 ///   cargo run --example feature_flags --features async-client
-use posthog_rs::FlagValue;
+use insights_rs::FlagValue;
 use serde_json::json;
 use std::collections::HashMap;
 
@@ -13,8 +13,8 @@ use std::collections::HashMap;
 #[tokio::main]
 async fn main() {
     // Try to get API key from environment, or use demo mode
-    let api_key = std::env::var("POSTHOG_API_TOKEN").unwrap_or_else(|_| {
-        println!("No POSTHOG_API_TOKEN found. Running in demo mode with mock data.\n");
+    let api_key = std::env::var("INSIGHTS_API_TOKEN").unwrap_or_else(|_| {
+        println!("No INSIGHTS_API_TOKEN found. Running in demo mode with mock data.\n");
         "demo_api_key".to_string()
     });
 
@@ -24,7 +24,7 @@ async fn main() {
     let client = if is_demo {
         create_demo_client().await
     } else {
-        posthog_rs::client(api_key.as_str()).await
+        insights_rs::client(api_key.as_str()).await
     };
 
     // Example 1: Simple boolean flag check
@@ -165,9 +165,9 @@ async fn main() {
 }
 
 #[cfg(feature = "async-client")]
-async fn create_demo_client() -> posthog_rs::Client {
+async fn create_demo_client() -> insights_rs::Client {
     println!("Note: Running in demo mode. API calls will fail but code structure is shown.\n");
-    posthog_rs::client(("demo_key", "https://demo.posthog.com")).await
+    insights_rs::client(("demo_key", "https://demo.insights.com")).await
 }
 
 #[cfg(not(feature = "async-client"))]

@@ -52,14 +52,14 @@ pub fn is_disabled() -> bool {
     *GLOBAL_DISABLE.get().unwrap_or(&false)
 }
 
-/// Capture the provided event, sending it to PostHog using the global client.
+/// Capture the provided event, sending it to Insights using the global client.
 #[cfg(feature = "async-client")]
 pub async fn capture(event: Event) -> Result<(), Error> {
     let client = GLOBAL_CLIENT.get().ok_or(Error::NotInitialized)?;
     client.capture(event).await
 }
 
-/// Capture the provided event, sending it to PostHog using the global client.
+/// Capture the provided event, sending it to Insights using the global client.
 #[cfg(not(feature = "async-client"))]
 pub fn capture(event: Event) -> Result<(), Error> {
     let client = GLOBAL_CLIENT.get().ok_or(Error::NotInitialized)?;
