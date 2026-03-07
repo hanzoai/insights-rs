@@ -3,12 +3,12 @@
 /// Shows 100-1000x faster flag evaluation by caching definitions locally.
 ///
 /// Setup:
-///   export POSTHOG_API_TOKEN=phc_your_project_key
-///   export POSTHOG_PERSONAL_API_TOKEN=phx_your_personal_key
+///   export INSIGHTS_API_TOKEN=phc_your_project_key
+///   export INSIGHTS_PERSONAL_API_TOKEN=phx_your_personal_key
 ///   cargo run --example local_evaluation --features async-client
 ///
-/// Get personal key at: https://app.posthog.com/me/settings
-use posthog_rs::ClientOptionsBuilder;
+/// Get personal key at: https://app.insights.com/me/settings
+use insights_rs::ClientOptionsBuilder;
 use serde_json::json;
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
@@ -17,25 +17,25 @@ use std::time::{Duration, Instant};
 #[tokio::main]
 async fn main() {
     // Get API keys from environment
-    let api_key = match std::env::var("POSTHOG_API_TOKEN") {
+    let api_key = match std::env::var("INSIGHTS_API_TOKEN") {
         Ok(key) => key,
         Err(_) => {
-            eprintln!("Error: POSTHOG_API_TOKEN environment variable not set");
-            eprintln!("Please set it to your PostHog project API token");
-            eprintln!("\nExample: export POSTHOG_API_TOKEN=phc_...");
+            eprintln!("Error: INSIGHTS_API_TOKEN environment variable not set");
+            eprintln!("Please set it to your Insights project API token");
+            eprintln!("\nExample: export INSIGHTS_API_TOKEN=phc_...");
             std::process::exit(1);
         }
     };
 
-    let personal_key = match std::env::var("POSTHOG_PERSONAL_API_TOKEN") {
+    let personal_key = match std::env::var("INSIGHTS_PERSONAL_API_TOKEN") {
         Ok(key) => key,
         Err(_) => {
-            eprintln!("Error: POSTHOG_PERSONAL_API_TOKEN environment variable not set");
-            eprintln!("Please set it to your PostHog personal API token");
+            eprintln!("Error: INSIGHTS_PERSONAL_API_TOKEN environment variable not set");
+            eprintln!("Please set it to your Insights personal API token");
             eprintln!("\nTo create a personal API key:");
-            eprintln!("1. Go to https://app.posthog.com/me/settings");
+            eprintln!("1. Go to https://app.insights.com/me/settings");
             eprintln!("2. Click 'Create personal API key'");
-            eprintln!("3. Export it: export POSTHOG_PERSONAL_API_TOKEN=phx_...");
+            eprintln!("3. Export it: export INSIGHTS_PERSONAL_API_TOKEN=phx_...");
             std::process::exit(1);
         }
     };
@@ -52,7 +52,7 @@ async fn main() {
             .build()
             .unwrap();
 
-        posthog_rs::client(options).await
+        insights_rs::client(options).await
     };
 
     // Create client WITHOUT local evaluation (for comparison)
@@ -62,7 +62,7 @@ async fn main() {
             .build()
             .unwrap();
 
-        posthog_rs::client(options).await
+        insights_rs::client(options).await
     };
 
     // Give local evaluation time to fetch initial flags

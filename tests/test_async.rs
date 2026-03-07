@@ -1,14 +1,14 @@
 #![cfg(feature = "async-client")]
 
 use httpmock::prelude::*;
-use posthog_rs::FlagValue;
+use insights_rs::FlagValue;
 use serde_json::json;
 use std::collections::HashMap;
 
-async fn create_test_client(base_url: String) -> posthog_rs::Client {
+async fn create_test_client(base_url: String) -> insights_rs::Client {
     // Use the From implementation to ensure endpoint_manager is set up correctly
-    let options: posthog_rs::ClientOptions = ("test_api_key", base_url.as_str()).into();
-    posthog_rs::client(options).await
+    let options: insights_rs::ClientOptions = ("test_api_key", base_url.as_str()).into();
+    insights_rs::client(options).await
 }
 
 #[tokio::test]
@@ -413,7 +413,7 @@ async fn test_capture_batch_sends_to_batch_endpoint() {
 
     let client = create_test_client(server.base_url()).await;
 
-    let event = posthog_rs::Event::new("test_event", "user1");
+    let event = insights_rs::Event::new("test_event", "user1");
     let result = client.capture_batch(vec![event], false).await;
 
     assert!(result.is_ok());
@@ -433,7 +433,7 @@ async fn test_capture_batch_historical_migration() {
 
     let client = create_test_client(server.base_url()).await;
 
-    let event = posthog_rs::Event::new("test_event", "user1");
+    let event = insights_rs::Event::new("test_event", "user1");
     let result = client.capture_batch(vec![event], true).await;
 
     assert!(result.is_ok());
@@ -451,11 +451,11 @@ async fn test_capture_batch_rate_limit() {
 
     let client = create_test_client(server.base_url()).await;
 
-    let event = posthog_rs::Event::new("test_event", "user1");
+    let event = insights_rs::Event::new("test_event", "user1");
     let result = client.capture_batch(vec![event], true).await;
 
     assert!(result.is_err());
-    assert!(matches!(result.unwrap_err(), posthog_rs::Error::RateLimit));
+    assert!(matches!(result.unwrap_err(), insights_rs::Error::RateLimit));
     batch_mock.assert();
 }
 
@@ -470,13 +470,13 @@ async fn test_capture_batch_bad_request() {
 
     let client = create_test_client(server.base_url()).await;
 
-    let event = posthog_rs::Event::new("test_event", "user1");
+    let event = insights_rs::Event::new("test_event", "user1");
     let result = client.capture_batch(vec![event], false).await;
 
     assert!(result.is_err());
     let err = result.unwrap_err();
     match err {
-        posthog_rs::Error::BadRequest(msg) => assert_eq!(msg, "invalid payload"),
+        insights_rs::Error::BadRequest(msg) => assert_eq!(msg, "invalid payload"),
         other => panic!("expected BadRequest, got: {:?}", other),
     }
     batch_mock.assert();

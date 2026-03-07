@@ -1,10 +1,10 @@
 use std::fmt;
 
 /// US ingestion endpoint
-pub const US_INGESTION_ENDPOINT: &str = "https://us.i.posthog.com";
+pub const US_INGESTION_ENDPOINT: &str = "https://us.i.insights.com";
 
 /// EU ingestion endpoint  
-pub const EU_INGESTION_ENDPOINT: &str = "https://eu.i.posthog.com";
+pub const EU_INGESTION_ENDPOINT: &str = "https://eu.i.insights.com";
 
 /// Default host (US by default)
 pub const DEFAULT_HOST: &str = US_INGESTION_ENDPOINT;
@@ -40,7 +40,7 @@ impl fmt::Display for Endpoint {
     }
 }
 
-/// Manages PostHog API endpoints and host configuration
+/// Manages Insights API endpoints and host configuration
 #[derive(Debug, Clone)]
 pub struct EndpointManager {
     base_host: String,
@@ -60,16 +60,16 @@ impl EndpointManager {
     }
 
     /// Determine the actual server host based on the provided host
-    /// Similar to posthog-python's determine_server_host function
+    /// Similar to insights-python's determine_server_host function
     pub fn determine_server_host(host: Option<String>) -> String {
         let host_or_default = host.unwrap_or_else(|| DEFAULT_HOST.to_string());
         let trimmed_host = host_or_default.trim_end_matches('/');
 
         match trimmed_host {
-            "https://app.posthog.com" | "https://us.posthog.com" => {
+            "https://app.insights.com" | "https://us.insights.com" => {
                 US_INGESTION_ENDPOINT.to_string()
             }
-            "https://eu.posthog.com" => EU_INGESTION_ENDPOINT.to_string(),
+            "https://eu.insights.com" => EU_INGESTION_ENDPOINT.to_string(),
             _ => trimmed_host.to_string(),
         }
     }
@@ -134,17 +134,17 @@ mod tests {
         );
 
         assert_eq!(
-            EndpointManager::determine_server_host(Some("https://app.posthog.com".to_string())),
+            EndpointManager::determine_server_host(Some("https://app.insights.com".to_string())),
             US_INGESTION_ENDPOINT
         );
 
         assert_eq!(
-            EndpointManager::determine_server_host(Some("https://us.posthog.com".to_string())),
+            EndpointManager::determine_server_host(Some("https://us.insights.com".to_string())),
             US_INGESTION_ENDPOINT
         );
 
         assert_eq!(
-            EndpointManager::determine_server_host(Some("https://eu.posthog.com".to_string())),
+            EndpointManager::determine_server_host(Some("https://eu.insights.com".to_string())),
             EU_INGESTION_ENDPOINT
         );
 

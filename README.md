@@ -1,13 +1,13 @@
-# PostHog Rust
+# Insights Rust
 
-[![Crates.io](https://img.shields.io/crates/v/posthog-rs.svg)](https://crates.io/crates/posthog-rs)
-[![Documentation](https://docs.rs/posthog-rs/badge.svg)](https://docs.rs/posthog-rs)
+[![Crates.io](https://img.shields.io/crates/v/insights-rs.svg)](https://crates.io/crates/insights-rs)
+[![Documentation](https://docs.rs/insights-rs/badge.svg)](https://docs.rs/insights-rs)
 
-The official Rust SDK for [PostHog](https://posthog.com). See the [PostHog docs](https://posthog.com/docs) for more information.
+The official Rust SDK for [Insights](https://insights.com). See the [Insights docs](https://insights.com/docs) for more information.
 
 ## Features
 
-- **Event capture** - Send events to PostHog for product analytics
+- **Event capture** - Send events to Insights for product analytics
 - **Feature flags** - Evaluate feature flags with local or remote evaluation
 - **A/B testing** - Support for multivariate flags and experiments
 - **Group analytics** - Track events and flags for B2B use cases
@@ -15,18 +15,18 @@ The official Rust SDK for [PostHog](https://posthog.com). See the [PostHog docs]
 
 # Quickstart
 
-Add `posthog-rs` to your `Cargo.toml`.
+Add `insights-rs` to your `Cargo.toml`.
 
 ```toml
 [dependencies]
-posthog-rs = "0.3.7"
+insights-rs = "0.3.7"
 ```
 
 ```rust
-let client = posthog_rs::client(env!("POSTHOG_API_KEY"));
+let client = insights_rs::client(env!("POSTHOG_API_KEY"));
 
 // Capture events
-let mut event = posthog_rs::Event::new("test", "1234");
+let mut event = insights_rs::Event::new("test", "1234");
 event.insert_prop("key1", "value1").unwrap();
 event.insert_prop("key2", vec!["a", "b"]).unwrap();
 
@@ -48,12 +48,12 @@ if is_enabled {
 
 ## Feature Flags
 
-The SDK now supports PostHog feature flags, allowing you to control feature rollout and run A/B tests.
+The SDK now supports Insights feature flags, allowing you to control feature rollout and run A/B tests.
 
 ### Basic Usage
 
 ```rust
-use posthog_rs::{client, ClientOptions, FlagValue};
+use insights_rs::{client, ClientOptions, FlagValue};
 use std::collections::HashMap;
 use serde_json::json;
 
@@ -149,7 +149,7 @@ if let Some(data) = payload {
 In production code, handle errors properly instead of using `.unwrap()`:
 
 ```rust
-use posthog_rs::{client, Error, FlagValue};
+use insights_rs::{client, Error, FlagValue};
 
 let client = client("your-api-key");
 
@@ -191,7 +191,7 @@ let is_enabled = client
     .unwrap_or(false);  // Default to disabled on error
 
 // Pattern 3: Propagate errors with ?
-fn check_feature(client: &posthog_rs::Client, user_id: &str) -> Result<bool, Error> {
+fn check_feature(client: &insights_rs::Client, user_id: &str) -> Result<bool, Error> {
     let flag = client.is_feature_enabled("premium-feature", user_id, None, None, None)?;
     Ok(flag)
 }
@@ -213,14 +213,14 @@ tracing_subscriber::fmt()
 Then set the `RUST_LOG` environment variable to control log levels:
 
 ```bash
-# See all posthog logs
-RUST_LOG=posthog_rs=debug cargo run
+# See all insights logs
+RUST_LOG=insights_rs=debug cargo run
 
 # See only warnings and errors
-RUST_LOG=posthog_rs=warn cargo run
+RUST_LOG=insights_rs=warn cargo run
 
 # See trace-level logs for flag evaluation
-RUST_LOG=posthog_rs=trace cargo run
+RUST_LOG=insights_rs=trace cargo run
 ```
 
 Log levels:

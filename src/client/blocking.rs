@@ -25,7 +25,7 @@ fn check_response(response: reqwest::blocking::Response) -> Result<(), Error> {
     }
 }
 
-/// A [`Client`] facilitates interactions with the PostHog API over HTTP.
+/// A [`Client`] facilitates interactions with the Insights API over HTTP.
 pub struct Client {
     options: ClientOptions,
     client: HttpClient,
@@ -76,7 +76,7 @@ pub fn client<C: Into<ClientOptions>>(options: C) -> Client {
 }
 
 impl Client {
-    /// Capture the provided event, sending it to PostHog.
+    /// Capture the provided event, sending it to Insights.
     #[instrument(skip(self, event), level = "debug")]
     pub fn capture(&self, mut event: Event) -> Result<(), Error> {
         if self.options.is_disabled() {
