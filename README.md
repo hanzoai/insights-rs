@@ -1,3 +1,5 @@
+<p align="center"><img src=".github/hero.svg" alt="insights-rs" width="880"></p>
+
 # Insights Rust
 
 [![Crates.io](https://img.shields.io/crates/v/insights-rs.svg)](https://crates.io/crates/insights-rs)
