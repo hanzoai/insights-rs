@@ -1,0 +1,10 @@
+# Rust client for Hanzo Insights — ships to crates.io from a tag.
+# Gate: the crate builds and its unit tests run. tests/ drives a live ingest
+# endpoint with an API key, so those are integration, not a push gate; --lib is
+# where the flag-evaluation logic that can be wrong offline lives.
+test:
+  - name: build-and-unit
+    run: |
+      set -euo pipefail
+      cargo build --all-features
+      cargo test --lib
