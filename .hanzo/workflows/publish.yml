@@ -57,7 +57,12 @@ jobs:
           set -euo pipefail
           NAME=$(grep -m1 '^name = ' Cargo.toml | sed 's/name = "\(.*\)"/\1/')
           NEW=$(grep -m1 '^version = ' Cargo.toml | sed 's/version = "\(.*\)"/\1/')
-          OLD=$(curl -sf "https://crates.io/api/v1/crates/$NAME" 2>/dev/null \
+          # crates.io's data-access policy (https://crates.io/data-access)
+          # rejects a request with no descriptive User-Agent -- curl's
+          # default one gets a 403, not the 404 a never-published crate
+          # actually returns.
+          OLD=$(curl -sf -H 'User-Agent: hanzoai-ci-publish (ops@hanzo.ai)' \
+                  "https://crates.io/api/v1/crates/$NAME" 2>/dev/null \
                   | jq -r '.crate.max_version // "0.0.0"' 2>/dev/null || echo "0.0.0")
 
           # FORWARD ONLY. `!=` fires in both directions and a revert would walk
