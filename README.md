@@ -1,5 +1,7 @@
 # Insights Rust
 
+[![Open in Hanzo](https://hanzo.app/badges/open-in-hanzo.svg)](https://hanzo.app/dev/open?repo=github.com/hanzoai/insights-rs&ref=main&action=open) [![Edit with Hanzo](https://hanzo.app/badges/edit-with-hanzo.svg)](https://hanzo.app/dev/open?repo=github.com/hanzoai/insights-rs&ref=main&action=edit) [![Deploy with Hanzo](https://hanzo.app/badges/deploy-with-hanzo.svg)](https://hanzo.app/dev/open?repo=github.com/hanzoai/insights-rs&ref=main&action=deploy)
+
 [![Crates.io](https://img.shields.io/crates/v/insights-rs.svg)](https://crates.io/crates/insights-rs)
 [![Documentation](https://docs.rs/insights-rs/badge.svg)](https://docs.rs/insights-rs)
 
